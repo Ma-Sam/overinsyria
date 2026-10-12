@@ -28,8 +28,7 @@ return new class extends Migration
             $table->index(['is_published', 'placement']);
         });
 
-        DB::statement('CREATE UNIQUE INDEX pages_slug_unique ON pages (slug) WHERE deleted_at IS NULL');
-    }
+        }
 
     public function down(): void
     {

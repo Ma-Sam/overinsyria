@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
@@ -24,9 +23,8 @@ return new class extends Migration
             $table->softDeletes();
 
             $table->index(['seller_id', 'is_approved']);
+            $table->unique(['author_id', 'listing_id']);
         });
-
-        DB::statement('CREATE UNIQUE INDEX reviews_author_listing_unique ON reviews (author_id, listing_id) WHERE deleted_at IS NULL AND listing_id IS NOT NULL');
     }
 
     public function down(): void

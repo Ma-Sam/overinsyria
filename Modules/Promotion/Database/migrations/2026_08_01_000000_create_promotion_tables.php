@@ -29,8 +29,6 @@ return new class extends Migration
             $table->softDeletes();
         });
 
-        DB::statement('CREATE UNIQUE INDEX promotion_plans_slug_unique ON promotion_plans (slug) WHERE deleted_at IS NULL');
-
         Schema::create('promotion_orders', function (Blueprint $table): void {
             $table->id();
             $table->unsignedBigInteger('user_id')->index();

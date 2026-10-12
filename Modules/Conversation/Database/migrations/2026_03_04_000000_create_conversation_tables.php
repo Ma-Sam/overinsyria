@@ -24,8 +24,6 @@ return new class extends Migration
             $table->index(['buyer_id', 'last_message_at']);
         });
 
-        DB::statement('CREATE UNIQUE INDEX conversations_listing_id_buyer_id_unique ON conversations (listing_id, buyer_id) WHERE deleted_at IS NULL');
-
         Schema::create('conversation_messages', function (Blueprint $table): void {
             $table->id();
             $table->foreignId('conversation_id')->constrained('conversations')->cascadeOnDelete();

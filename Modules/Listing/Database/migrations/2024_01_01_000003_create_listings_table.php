@@ -36,8 +36,6 @@ return new class extends Migration
             $table->softDeletes();
         });
 
-        DB::statement('CREATE UNIQUE INDEX listings_slug_unique ON listings (slug) WHERE deleted_at IS NULL');
-
         Schema::create('listing_custom_fields', function (Blueprint $table): void {
             $table->id();
             $table->string('name');
@@ -54,8 +52,7 @@ return new class extends Migration
             $table->softDeletes();
         });
 
-        DB::statement('CREATE UNIQUE INDEX listing_custom_fields_name_unique ON listing_custom_fields (name) WHERE deleted_at IS NULL');
-    }
+        }
 
     public function down(): void
     {

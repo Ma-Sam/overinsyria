@@ -22,8 +22,6 @@ return new class extends Migration
             $table->softDeletes();
         });
 
-        DB::statement('CREATE UNIQUE INDEX countries_code_unique ON countries (code) WHERE deleted_at IS NULL');
-
         Schema::create('cities', function (Blueprint $table) {
             $table->id();
             $table->string('name');
