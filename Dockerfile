@@ -15,4 +15,3 @@ RUN chown -R www-data:www-data /var/www/storage /var/www/bootstrap/cache
 
 EXPOSE 80
 CMD ["/usr/bin/supervisord", "-c", "/etc/supervisor/conf.d/supervisord.conf"]
-"@ | Set-Content -Path "Dockerfile" -Encoding UTF8
