@@ -4,10 +4,11 @@ declare(strict_types=1);
 
 namespace Modules\User\Filament\Admin\Resources;
 
-use Filament\Tables\Filters\SelectFilter;\r?\nuse BackedEnum;
+use BackedEnum;
 use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
 use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
 use Modules\Admin\Support\Filament\ResourceTableActions;
 use Modules\Admin\Support\Filament\ResourceTableColumns;
@@ -43,10 +44,11 @@ class UserResource extends Resource
             TextColumn::make('name')->searchable()->sortable(),
             TextColumn::make('email')->searchable()->sortable(),
             TextColumn::make('roles.name')->badge()->label('Roles'),
-            TextColumn::make('status')->badge()->formatStateUsing(fn (\) => class_basename((string) \)),
+            TextColumn::make('status')->badge()->sortable(),
             TextColumn::make('created_at')->dateTime()->sortable(),
         ])->defaultSort('id', 'desc')->filters([
-            SelectFilter::make('status')->options(fn () => \Modules\User\App\Models\User::query()->distinct()->whereNotNull('status')->pluck('status', 'status')->mapWithKeys(fn (\) => [\ => class_basename(\)])->toArray()),
+            SelectFilter::make('status')
+                ->options(fn () => User::query()->distinct()->whereNotNull('status')->pluck('status', 'status')->mapWithKeys(fn ($v) => [$v => class_basename($v)])->toArray()),
         ])->actions(ResourceTableActions::editActivityDelete(static::class, [
             Impersonate::make(),
         ]));
