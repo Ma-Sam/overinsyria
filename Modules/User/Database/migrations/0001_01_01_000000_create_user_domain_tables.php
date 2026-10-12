@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
@@ -14,7 +13,7 @@ return new class extends Migration
         Schema::create('users', function (Blueprint $table): void {
             $table->id();
             $table->string('name');
-            $table->string('email');
+            $table->string('email')->unique();
             $table->timestamp('email_verified_at')->nullable();
             $table->string('status')->default('active');
             $table->string('password');
@@ -24,11 +23,9 @@ return new class extends Migration
             $table->softDeletes();
         });
 
-        DB::statement('CREATE UNIQUE INDEX users_email_unique ON users (email) WHERE deleted_at IS NULL');
-
         Schema::create('profiles', function (Blueprint $table): void {
             $table->id();
-            $table->foreignId('user_id')->constrained('users')->cascadeOnDelete();
+            $table->foreignId('user_id')->unique()->constrained('users')->cascadeOnDelete();
             $table->string('avatar')->nullable();
             $table->text('bio')->nullable();
             $table->string('phone')->nullable();
@@ -39,8 +36,6 @@ return new class extends Migration
             $table->timestamps();
             $table->softDeletes();
         });
-
-        DB::statement('CREATE UNIQUE INDEX profiles_user_id_unique ON profiles (user_id) WHERE deleted_at IS NULL');
 
         Schema::create('password_reset_tokens', function (Blueprint $table): void {
             $table->string('email')->primary();
