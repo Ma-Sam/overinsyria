@@ -4,9 +4,6 @@ declare(strict_types=1);
 
 namespace Modules\Listing\Support\Filament;
 
-use A909M\FilamentStateFusion\Forms\Components\StateFusionSelect;
-use A909M\FilamentStateFusion\Tables\Columns\StateFusionSelectColumn;
-use A909M\FilamentStateFusion\Tables\Filters\StateFusionSelectFilter;
 use Cheesegrits\FilamentGoogleMaps\Fields\Map;
 use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\Select;
@@ -71,7 +68,7 @@ class AdminListingResourceSchema
                 ->visible(fn (Get $get): bool => ListingCustomFieldSchemaBuilder::hasFields(
                     ($categoryId = $get('category_id')) ? (int) $categoryId : null
                 )),
-            StateFusionSelect::make('status')->required(),
+            TextInput::make('status')->required()->default('Modules\\\\Listing\\\\States\\\\ActiveListingStatus'),
             PhoneInput::make('contact_phone')->defaultCountry(CountryCodeManager::defaultCountryIso2())->nullable(),
             TextInput::make('contact_email')->email()->maxLength(255),
             Toggle::make('is_featured')->default(false),
@@ -128,14 +125,14 @@ class AdminListingResourceSchema
                 TextColumn::make('price')
                     ->currency(fn (Listing $record): string => $record->currency ?: ListingPanelHelper::defaultCurrency())
                     ->sortable(),
-                StateFusionSelectColumn::make('status')->sortable(),
+                TextColumn::make('status')->badge()->formatStateUsing(fn (\) => class_basename((string) \))->sortable(),
                 IconColumn::make('is_featured')->boolean()->label('Featured')->sortable(),
                 TextColumn::make('city')->sortable(),
                 TextColumn::make('country')->sortable(),
                 TextColumn::make('created_at')->dateTime()->sortable(),
             ])
             ->filters([
-                StateFusionSelectFilter::make('status'),
+                SelectFilter::make('status')->options(fn () => \Modules\Listing\Models\Listing::query()->distinct()->whereNotNull('status')->pluck('status', 'status')->mapWithKeys(fn (\) => [\ => class_basename(\)])->toArray()),
                 SelectFilter::make('category_id')
                     ->label('Category')
                     ->relationship('category', 'name')

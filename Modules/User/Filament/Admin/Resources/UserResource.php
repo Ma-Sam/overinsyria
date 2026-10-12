@@ -4,9 +4,7 @@ declare(strict_types=1);
 
 namespace Modules\User\Filament\Admin\Resources;
 
-use A909M\FilamentStateFusion\Tables\Columns\StateFusionSelectColumn;
-use A909M\FilamentStateFusion\Tables\Filters\StateFusionSelectFilter;
-use BackedEnum;
+use Filament\Tables\Filters\SelectFilter;\r?\nuse BackedEnum;
 use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
 use Filament\Tables\Columns\TextColumn;
@@ -45,10 +43,10 @@ class UserResource extends Resource
             TextColumn::make('name')->searchable()->sortable(),
             TextColumn::make('email')->searchable()->sortable(),
             TextColumn::make('roles.name')->badge()->label('Roles'),
-            StateFusionSelectColumn::make('status'),
+            TextColumn::make('status')->badge()->formatStateUsing(fn (\) => class_basename((string) \)),
             TextColumn::make('created_at')->dateTime()->sortable(),
         ])->defaultSort('id', 'desc')->filters([
-            StateFusionSelectFilter::make('status'),
+            SelectFilter::make('status')->options(fn () => \Modules\User\App\Models\User::query()->distinct()->whereNotNull('status')->pluck('status', 'status')->mapWithKeys(fn (\) => [\ => class_basename(\)])->toArray()),
         ])->actions(ResourceTableActions::editActivityDelete(static::class, [
             Impersonate::make(),
         ]));

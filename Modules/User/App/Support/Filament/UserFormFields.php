@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Modules\User\App\Support\Filament;
 
-use A909M\FilamentStateFusion\Forms\Components\StateFusionSelect;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 
@@ -29,9 +28,9 @@ class UserFormFields
             ->dehydrated(fn ($state) => filled($state));
     }
 
-    public static function status(): StateFusionSelect
+    public static function status(): TextInput
     {
-        return StateFusionSelect::make('status')->required();
+        return TextInput::make('status')->required()->default('active');
     }
 
     public static function roles(): Select
