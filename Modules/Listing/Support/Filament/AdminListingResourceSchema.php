@@ -125,14 +125,14 @@ class AdminListingResourceSchema
                 TextColumn::make('price')
                     ->currency(fn (Listing $record): string => $record->currency ?: ListingPanelHelper::defaultCurrency())
                     ->sortable(),
-                TextColumn::make('status')->badge()->formatStateUsing(fn (\) => class_basename((string) \))->sortable(),
+                TextColumn::make('status')->badge()->formatStateUsing(fn ($state) => class_basename((string) $state))->sortable(),
                 IconColumn::make('is_featured')->boolean()->label('Featured')->sortable(),
                 TextColumn::make('city')->sortable(),
                 TextColumn::make('country')->sortable(),
                 TextColumn::make('created_at')->dateTime()->sortable(),
             ])
             ->filters([
-                SelectFilter::make('status')->options(fn () => \Modules\Listing\Models\Listing::query()->distinct()->whereNotNull('status')->pluck('status', 'status')->mapWithKeys(fn (\) => [\ => class_basename(\)])->toArray()),
+                SelectFilter::make('status')->options(fn () => \Modules\Listing\Models\Listing::query()->distinct()->whereNotNull('status')->pluck('status', 'status')->mapWithKeys(fn ($v) => [$v => class_basename($v)])->toArray()),
                 SelectFilter::make('category_id')
                     ->label('Category')
                     ->relationship('category', 'name')
