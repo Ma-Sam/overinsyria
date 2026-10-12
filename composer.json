@@ -108,6 +108,8 @@
             "php-http/discovery": true,
             "wikimedia/composer-merge-plugin": true
         }
+        "no-api": true
+
     },
     "minimum-stability": "stable",
     "prefer-stable": true
