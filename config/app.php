@@ -7,12 +7,12 @@ return [
     'env' => env('APP_ENV', 'production'),
     'debug' => (bool) env('APP_DEBUG', false),
     'url' => env('APP_URL', 'http://localhost'),
-    'timezone' => 'UTC',
-    'locale' => env('APP_LOCALE', 'tr'),
+    'timezone' => 'Asia/Damascus',
+    'locale' => env('APP_LOCALE', 'ar'),
 
     'available_locales' => ['en', 'tr', 'ar', 'zh', 'es', 'fr', 'de', 'pt', 'ru', 'ja'],
 
-    'currencies' => ['USD'],
+    'currencies' => ['USD', 'SYP'],
 
     'fallback_locale' => env('APP_FALLBACK_LOCALE', 'en'),
 
