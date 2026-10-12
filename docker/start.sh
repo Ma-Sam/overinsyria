@@ -1,17 +1,28 @@
-#!/bin/sh
-set -e
+﻿#!/bin/sh
+set -eu
 
-if [ ! -f /var/www/html/.env ]; then
-    cp /var/www/html/.env.example /var/www/html/.env
-    php artisan key:generate --force
+cd /var/www/html
+
+if [ -z "${APP_KEY:-}" ]; then
+    echo "ERROR: APP_KEY must be configured in Railway."
+    exit 1
+fi
+
+PORT="${PORT:-8080}"
+sed "s/PORT_PLACEHOLDER/${PORT}/g" \
+    /etc/nginx/nginx.conf.template \
+    > /etc/nginx/nginx.conf
+
+mkdir -p storage/app/public storage/app/private bootstrap/cache
+
+if [ ! -e public/storage ]; then
+    php artisan storage:link
 fi
 
 php artisan migrate --force
-php artisan db:seed --force
+
 php artisan config:cache
-php artisan route:cache
 php artisan view:cache
-php artisan storage:link
 
 php-fpm -D
 nginx -g 'daemon off;'
