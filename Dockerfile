@@ -1,10 +1,6 @@
 ﻿FROM php:8.4-fpm
 
-RUN apt-get update && apt-get install -y \
-    git curl zip unzip libpng-dev libjpeg-dev libfreetype6-dev \
-    libonig-dev libxml2-dev libzip-dev libicu-dev supervisor nginx \
-    && docker-php-ext-configure gd --with-freetype --with-jpeg \
-    && docker-php-ext-install pdo_mysql mbstring exif pcntl bcmath gd zip intl
+RUN apt-get update && apt-get install -y git curl zip unzip libpng-dev libjpeg-dev libfreetype6-dev libonig-dev libxml2-dev libzip-dev libicu-dev supervisor nginx && docker-php-ext-configure gd --with-freetype --with-jpeg && docker-php-ext-install pdo_mysql mbstring exif pcntl bcmath gd zip intl
 
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 COPY docker/nginx.conf /etc/nginx/sites-available/default
@@ -13,9 +9,10 @@ COPY docker/supervisord.conf /etc/supervisor/conf.d/supervisord.conf
 WORKDIR /var/www
 COPY . .
 
-RUN composer install --no-dev --optimize-autoloader
+RUN composer install --no-dev --optimize-autoloader --prefer-source
 
 RUN chown -R www-data:www-data /var/www/storage /var/www/bootstrap/cache
 
 EXPOSE 80
 CMD ["/usr/bin/supervisord", "-c", "/etc/supervisor/conf.d/supervisord.conf"]
+"@ | Set-Content -Path "Dockerfile" -Encoding UTF8
